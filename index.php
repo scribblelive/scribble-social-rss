@@ -27,7 +27,7 @@ $json = $request->send()->json();
 $Title = $json["Title"];
 ?>
 <div class="container">
-      <h1 class="page-header"><?php echo $Title; ?></h1>
+      <h1 class="page-header"><?php echo $Title; ?>!</h1>
 
 <?php
 foreach( $json["Posts"] as $Post )
