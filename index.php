@@ -14,12 +14,11 @@
 require 'vendor/autoload.php';
 use Guzzle\Http\Client;
     
-$client = new Client('https://scribblelive.p.mashape.com/', 
+$client = new Client('http://apiv1.scribblelive.com', 
     array
     (
         'request.options' => array(
-            'headers' => array("X-Mashape-Authorization" => "8HZNmWVe6XXI0Abu50NgzZoQ6V5Lfh1l"),
-            'query' => array("Token" => "OBtoB7Tk"),
+            'query' => array("Token" => "H5lrJBkO", "format" => "json"),
     )
 ));
 
