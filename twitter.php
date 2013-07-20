@@ -47,7 +47,14 @@ foreach( $json["Posts"] as $Post )
 {
     try
     {
-        $Content = $Post["Creator"]["Name"] . ": ";
+        if( !isset( $_GET["noname"] ) ) 
+        {
+            $Content = $Post["Creator"]["Name"] . ": ";
+        }
+        else
+        {
+            $Content = "";
+        }
         
         $PostUrl = $Url . "/" . $Post["Id"];
         
@@ -143,6 +150,7 @@ foreach( $json["Posts"] as $Post )
         <title><?php echo htmlentities( $Content ); ?></title>
         <description><?php echo htmlentities( $Content ); ?></description>
         <pubDate><?php echo date(DATE_RSS, $Created ); ?></pubDate>
+        <author><?php echo $Post["Creator"]["Name"]; ?></author>
         <link><?php echo $PostUrl; ?></link>
         <guid><?php echo $PostUrl; ?></guid>
     </item>
