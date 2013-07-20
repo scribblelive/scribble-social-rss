@@ -4,19 +4,37 @@ require 'lib/html2text.php';
 use Guzzle\Http\Client;
 
 date_default_timezone_set("UTC"); 
-header( "Content-type: application/xml");
+
+$EventId = ( isset($_GET["eventid"]) ? $_GET["eventid"] : 0 );
+$Token = ( isset( $_GET["token"] ) ? $_GET["token"] : 0 );
+
+if( !$Token || !$EventId )
+{
+    echo "Invalid arguments";
+    header("HTTP/1.0 404 Not Found");
+    return;
+}
     
 $client = new Client('http://apiv1.scribblelive.com', 
     array
     (
         'request.options' => array(
-            'query' => array("Token" => "H5lrJBkO", "format" => "json"),
+            'query' => array("Token" => $Token, "format" => "json"),
     )
 ));
 
-$request = $client->get('/event/39048/page/last?PageSize=20');
+$request = $client->get('/event/' . $EventId . '/page/last?PageSize=20');
 
-$json = $request->send()->json();
+try
+{
+    $json = $request->send()->json();
+}
+catch( Exception $e )
+{
+    echo "Error hitting API. Are you sure your token and event are correct?";
+    header("HTTP/1.0 505 Error hitting API");
+    return;
+}
 
 $Title = $json["Title"];
 
@@ -25,13 +43,13 @@ $Url = $json["Websites"][0]["Url"];
 preg_match( "/([0-9]+)/", $json["LastModified"], $LastModified );
 $LastModified = $LastModified[0] / 1000;
 
+header( "Content-type: application/xml");
 echo '<?xml version="1.0"?>';
 ?>
 <rss version="2.0">
    <channel>
       <title><?php echo $Title; ?></title>
       <link><?php echo $Url; ?></link>
-      <language>en-us</language>
       <pubDate><?php echo date(DATE_RSS, $LastModified ); ?></pubDate>
       <lastBuildDate><?php echo date(DATE_RSS, $LastModified ); ?></lastBuildDate>
       <docs>http://blogs.law.harvard.edu/tech/rss</docs>
