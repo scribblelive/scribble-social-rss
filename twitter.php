@@ -65,7 +65,7 @@ foreach( $json["Posts"] as $Post )
 {
     try
     {
-        if( !isset( $_GET["noname"] ) ) 
+        if( !isset( $_GET["noname"] ) || $_GET["noname"] != "1" ) 
         {
             $Content = $Post["Creator"]["Name"] . ": ";
         }
@@ -81,7 +81,7 @@ foreach( $json["Posts"] as $Post )
             $TextContent = convert_html_to_text( trim( $Post["Content"] ) );
         }
         
-        if( ( $Post["Type"] != "IMAGE" || isset( $_GET["notweets"] ) ) && preg_match( "/twitter\.com/", $Post["Source"] ) )
+        if( ( $Post["Type"] != "IMAGE" || ( isset( $_GET["notweets"] ) && $_GET["notweets"] == "1" ) ) && preg_match( "/twitter\.com/", $Post["Source"] ) )
         {
             continue;
         }
@@ -105,7 +105,7 @@ foreach( $json["Posts"] as $Post )
             {
                 // Image tags version
                 
-                if( ! empty( $TextContent ) )
+                if( ! isset( $TextContent ) )
                 {
                     $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
                     
@@ -130,7 +130,7 @@ foreach( $json["Posts"] as $Post )
             {
                 // Twitter Cards version
                 
-                if( ! empty( $TextContent ) )
+                if( ! isset( $TextContent ) )
                 {
                     $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
                     

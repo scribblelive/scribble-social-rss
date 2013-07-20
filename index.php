@@ -1,96 +1,73 @@
 <html>
 <head>
-<title>ScribbleLive PHP</title>
-<link rel="stylesheet" href="https://app.divshot.com/css/bootstrap.css">
-    <link rel="stylesheet" href="https://app.divshot.com/css/bootstrap-responsive.css">
-    <script src="https://app.divshot.com/js/jquery.min.js"></script>
-    <script src="https://app.divshot.com/js/bootstrap.min.js"></script>
-    <script src="http://platform.twitter.com/widgets.js"></script>
-    
-
+<title>Scribble Social RSS</title>
+<meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+    <style type="text/css">
+    label
+    {
+        margin-right: 10px;
+        padding-top: 1px;
+    }
+    </style>
 </head>
 <body>
-<?php
-require 'vendor/autoload.php';
-use Guzzle\Http\Client;
-    
-$client = new Client('http://apiv1.scribblelive.com', 
-    array
-    (
-        'request.options' => array(
-            'query' => array("Token" => "H5lrJBkO", "format" => "json"),
-    )
-));
 
-$request = $client->get('/event/39048/page/last?PageSize=25');
-
-$json = $request->send()->json();
-
-$Title = $json["Title"];
-?>
 <div class="container">
-      <h1 class="page-header"><?php echo $Title; ?></h1>
-
-<?php
-foreach( $json["Posts"] as $Post )
-{
-?>
-    <div class="row" style="margin-bottom: 10px;" id="Post<?php echo $Post["Id"] ?>">
-        <div class="span2">
-          <h4 style="text-align: right; margin-top: 0"><?php echo $Post["Creator"]["Name"]; ?></h4>
+      <div class="hero-unit">
+        <h1>Scribble Social RSS</h1>
+        <p>An RSS feed from <a href="http://www.scribblelive.com">ScribbleLive</a> formatted for social networks</p>
+        <div class="alert">
+         <b>BETA</b> This is not an officially supported product.
         </div>
-        <div class="span8">
-            <?php if ( $Post["Type"] == "IMAGE" ) {  ?>
-                <img src="<?php echo $Post["Media"][0]["Url"]; ?>" class="pull-left img-rounded" style="max-height: 300px; margin-right: 15px">
-            <?php } ?>
-          
-          <p><?php echo $Post["Content"]; ?></p>
-          
-          <?php
-          if( $Post["Source"] && preg_match( "/twitter\.com/", $Post["Source"] ) ) 
-          {
-              preg_match( "/[0-9]+/", $Post["Source"], $TweetIds );
-          }
-          else
-          {
-              $TweetIds = null;
-          }
-          
-          if( $TweetIds && count( $TweetIds ) )
-          {
-          ?>
-            <script>
-            twttr.ready( function(twttr) {
-                var TweetPost = $("#Post<?php echo $Post["Id"]; ?>");
-                TweetPost.find("div").empty();
-                twttr.widgets.createTweet('<?php echo $TweetIds[0]; ?>', TweetPost.find(".span8").get(0) );
-            })
-            </script>
-          <?php } ?>
-        </div>
+        <p><a class="btn btn-primary btn-large" href="https://github.com/scribblelive/">Download Source<br></a></p>
       </div>
-      <hr />
+      
+      
+      
+      <form class="form-vertical" method="get" action="/twitter.php">
+      <h2>Setup</h2>
+      
+        <label class="pull-left">Format</label> <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> Twitter <span class="caret"></span> </a>
+        
+        <div class="btn-group">
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#">Twitter</a>
+            </li>
+          </ul>
+        </div>
+      
+        <div>
+            <label class="pull-left">API Token</label> <input type="text" class="input-medium" id="token" name="token" placeholder="abc123">
+        </div>
+        
+        <div>
+            <label class="pull-left">Event Id</label> <input type="text" class="input-medium" id="eventid" name="eventid" placeholder="123">
+        </div>
+        
+        <div>
+            <label class="checkbox" for="nonamecheckbox">
+              <input type="checkbox" value="" onChange="document.getElementById('noname').value = (this.checked ? 0 : 1 );" id="nonamecheckbox" checked="checked">
+              <span>Include usernames</span>
+            </label>
+        </div>
+        <input type="hidden" id="noname" name="noname" value="" />
+        <div>
+            <label class="checkbox" for="notweetscheckbox">
+              <input type="checkbox" value="" onChange="document.getElementById('notweets').value = (this.checked ? 0 : 1 );" id="notweetscheckbox" checked="checked">
+              <span>Include tweets</span>
+            </label>
+        </div>
+        <input type="hidden" id="notweets" name="notweets" value="" />
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Generate Feed</button>
+          <input type="reset" class="btn" value="Reset">
+        </div>
+      </form>
+    </div>
 
-<?php
-}
-?>
-
-</div>
-<!-- START Parse.ly Include: Standard -->
-<div id="parsely-root" style="display: none">
-<div id="parsely-cfg" data-parsely-site="scribblelive.com"></div>
-</div>
-<script>
-(function(s, p, d) {
-var h=d.location.protocol, i=p+"-"+s,
-e=d.getElementById(i), r=d.getElementById(p+"-root"),
-u=h==="https:"?"d1z2jf7jlzjs58.cloudfront.net"
-:"static."+p+".com";
-if (e) return;
-e = d.createElement(s); e.id = i; e.async = true;
-e.src = h+"//"+u+"/p.js"; r.appendChild(e);
-})("script", "parsely", document);
-</script>
-<!-- END Parse.ly Include -->
 </body>
 </html>
