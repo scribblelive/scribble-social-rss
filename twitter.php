@@ -101,52 +101,27 @@ foreach( $json["Posts"] as $Post )
         }
         else if( $Post["Type"] == "IMAGE" )
         {
-            if( isset( $_GET["imgtags"] ) )
+            if( isset( $TextContent ) )
             {
-                // Image tags version
+                // Strip out links with descriptions that were just a domain
+                $TextContent = preg_replace( "/\[(.*?\.([a-z]{2,4}))\]\(https?:\/\/.*?\)/", "", $TextContent );
+                $TextContent = preg_replace( "/\[(https?:\/\/.*?)\]\(https?:\/\/.*?\)/", "", $TextContent );
                 
-                if( ! isset( $TextContent ) )
+                // For any remaining links, just display the descriptive text
+                $TextContent = preg_replace( "/\[(.*?)\]\(https?:\/\/.*?\)/", "$1", $TextContent );
+                
+                if( strlen( $Content ) + strlen( $TextContent ) > 140 - 26 )
                 {
-                    $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
-                    
-                    if( strlen( $Content ) + strlen( $TextContent ) > 140 - 26 )
-                    {
-                        $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " 
-                            . "<a href='" . $PostUrl . "'><img src='" . $Post["Media"][0]["Url"] . "' /></a>" ;
-                    }
-                    else
-                    {
-                        $Content = $Content . $TextContent . " "
-                            . "<a href='" . $PostUrl . "'><img src='" . $Post["Media"][0]["Url"] . "' /></a>";
-                    }
+                    $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " . $PostUrl;
                 }
                 else
                 {
-                    $Content = $Content . "(Image) " . "<a href='" . $PostUrl . "'><img src='" . $Post["Media"][0]["Url"] . "' /></a>";
+                    $Content = $Content . $TextContent . " " . $PostUrl;
                 }
-            
             }
             else
             {
-                // Twitter Cards version
-                
-                if( isset( $TextContent ) )
-                {
-                    $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
-                    
-                    if( strlen( $Content ) + strlen( $TextContent ) > 140 - 26 )
-                    {
-                        $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " . $PostUrl;
-                    }
-                    else
-                    {
-                        $Content = $Content . $TextContent . " " . $PostUrl;
-                    }
-                }
-                else
-                {
-                    $Content = $Content . "(Image) " . $PostUrl;
-                }
+                $Content = $Content . "(Image) " . $PostUrl;
             }
         }
         else
