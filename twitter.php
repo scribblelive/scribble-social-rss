@@ -56,15 +56,17 @@ foreach( $json["Posts"] as $Post )
             $TextContent = convert_html_to_text( trim( $Post["Content"] ) );
         }
         
-        if( preg_match( "/twitter\.com/", $Post["Source"] ) )
+        if( $Post["Type"] != "IMAGE" && preg_match( "/twitter\.com/", $Post["Source"] ) )
         {
             continue;
         }
         else if( $Post["Type"] == "TEXT" && ! empty( $TextContent ) )
         {
+            $TextContent = preg_replace( "/\[.*?\]\((https?:\/\/.*?)\)/", "$1", $TextContent );
+            
             if( strlen( $Content ) + strlen( $TextContent ) > 140 )
             {
-                $Content = $Content . ShortenText( $TextContent, 140 - strlen( $Content ) - 3 ) . "...";
+                $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " . $PostUrl;
             }
             else
             {
@@ -79,6 +81,8 @@ foreach( $json["Posts"] as $Post )
                 
                 if( ! empty( $TextContent ) )
                 {
+                    $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
+                    
                     if( strlen( $Content ) + strlen( $TextContent ) > 140 - 26 )
                     {
                         $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " 
@@ -102,6 +106,8 @@ foreach( $json["Posts"] as $Post )
                 
                 if( ! empty( $TextContent ) )
                 {
+                    $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
+                    
                     if( strlen( $Content ) + strlen( $TextContent ) > 140 - 26 )
                     {
                         $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " . $PostUrl;
