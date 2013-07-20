@@ -63,7 +63,7 @@ foreach( $json["Posts"] as $Post )
             $TextContent = convert_html_to_text( trim( $Post["Content"] ) );
         }
         
-        if( $Post["Type"] != "IMAGE" && preg_match( "/twitter\.com/", $Post["Source"] ) )
+        if( ( $Post["Type"] != "IMAGE" || isset( $_GET["notweets"] ) ) && preg_match( "/twitter\.com/", $Post["Source"] ) )
         {
             continue;
         }
