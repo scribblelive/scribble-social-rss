@@ -22,13 +22,13 @@
         <div class="alert">
          <b>BETA</b> This is not an officially supported product.
         </div>
-        <p><a class="btn btn-primary btn-large" href="https://github.com/scribblelive/">Download Source<br></a></p>
+        <p><a class="btn btn-primary btn-large" href="https://github.com/scribblelive/scribble-social-rss">Download Source<br></a></p>
       </div>
       
       
       
       <form class="form-vertical" method="get" action="/twitter.php">
-      <h2>Setup</h2>
+      <h2>Configure</h2>
       
         <label class="pull-left">Format</label> <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> Twitter <span class="caret"></span> </a>
         
