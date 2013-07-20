@@ -7,6 +7,8 @@ An RSS feed from ScribbleLive, formatted for social networks.
 This RSS includes only post types that would work on Twitter (i.e. text, images) but doesn't include Flash embeds, etc. All posts will be shortened to 140 characters once URLs inside them have been shortened.
 
 ##How to Use
+To setup your feed, go to *index.php*, file out the configuration form, and click _Generate Feed_. Optionally, you can access *twitter.php* with the parameters below on the query string. 
+
 To send the entries in this RSS to Twitter, you can use a third-party service like [IFTTT](http://ifttt.com) or [Zapier](http://zapier.com). Both services have the ability to periodically pull an RSS feed and send the results to Twitter.
 
 ##Parameters
