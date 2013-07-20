@@ -130,7 +130,7 @@ foreach( $json["Posts"] as $Post )
             {
                 // Twitter Cards version
                 
-                if( ! isset( $TextContent ) )
+                if( isset( $TextContent ) )
                 {
                     $TextContent = preg_replace( "/\[.*?\]\(https?:\/\/.*?\)/", "", $TextContent );
                     
