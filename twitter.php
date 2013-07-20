@@ -60,9 +60,10 @@ foreach( $json["Posts"] as $Post )
         {
             continue;
         }
-        else if( $Post["Type"] == "TEXT" && ! empty( $TextContent ) )
+        else if( $Post["Type"] == "TEXT" && ! empty( $TextContent )  )
         {
-            $TextContent = preg_replace( "/\[.*?\]\((https?:\/\/.*?)\)/", "$1", $TextContent );
+            $TextContent = preg_replace( "/\[http:\/\/.*?\]\((https?:\/\/.*?)\)/", "$1", $TextContent );
+            $TextContent = preg_replace( "/\[(.*?)\]\((https?:\/\/.*?)\)/", "$1 $2", $TextContent );
             
             if( strlen( $Content ) + strlen( $TextContent ) > 140 )
             {
