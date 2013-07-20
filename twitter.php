@@ -25,8 +25,8 @@ $Url = $json["Websites"][0]["Url"];
 preg_match( "/([0-9]+)/", $json["LastModified"], $LastModified );
 $LastModified = $LastModified[0] / 1000;
 
-
-?><?xml version="1.0"?>
+echo '<?xml version="1.0"?>';
+?>
 <rss version="2.0">
    <channel>
       <title><?php echo $Title; ?></title>
