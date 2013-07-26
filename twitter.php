@@ -44,7 +44,7 @@ preg_match( "/([0-9]+)/", $json["LastModified"], $LastModified );
 $LastModified = $LastModified[0] / 1000;
 
 header( "Content-type: application/xml");
-echo '<?xml version="1.0"?>';
+echo '<?xml version="1.0" encoding="UTF-8"?>';
 ?>
 <rss version="2.0">
    <channel>
@@ -138,10 +138,24 @@ foreach( $json["Posts"] as $Post )
         continue;
     }
     
+    try
+    {
+        $HtmlEncoded = htmlentities( $Content, 0, 'UTF-8' ); 
+        
+        if( preg_match( "/&acirc;/", $HtmlEncoded) ) 
+        {
+            continue;
+        }
+    }
+    catch( Exception $ex )
+    {
+        continue;
+    }
+    
 ?>
     <item>
-        <title><?php echo htmlentities( $Content ); ?></title>
-        <description><?php echo htmlentities( $Content ); ?></description>
+        <title><?php echo $HtmlEncoded; ?></title>
+        <description><?php echo $HtmlEncoded; ?></description>
         <pubDate><?php echo date(DATE_RSS, $Created ); ?></pubDate>
         <author><?php echo $Post["Creator"]["Name"]; ?></author>
         <link><?php echo $PostUrl; ?></link>
