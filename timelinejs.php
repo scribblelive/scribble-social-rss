@@ -24,7 +24,7 @@ $client = new Client('http://apiv1.scribblelive.com',
     )
 ));
 
-$request = $client->get('/event/' . $EventId . '/all?Max=200');
+$request = $client->get('/event/' . $EventId . '/all?Max=100');
 
 try
 {
@@ -51,7 +51,7 @@ header( "Content-type: application/json");
     {
      "headline":"<?php echo $Title; ?>",
         "type":"default",
-        "text":"<?php echo $Title; ?>",
+        "text":"<p><?php echo $Title; ?></p>",
         "asset": {
             "media":"https://d2hlwa4qdwmewe.cloudfront.net/Style/Images/Admin/ScribbleLiveBrand.png",
             "caption":"ScribbleLive"
@@ -131,6 +131,7 @@ foreach( $json["Posts"] as $Post )
                 {
                     $Content = $Content . ShortenText( $TextContent, 140 - 26 - strlen( $Content ) - 3 ) . "... " ;//. $PostUrl;
                     $IsShortened = true;
+                    $Content = preg_replace( "/\"/", "\\\"", html_entity_decode( $Content, 0, 'UTF-8' ) );
                 }
                 else
                 {
@@ -185,8 +186,8 @@ foreach( $json["Posts"] as $Post )
     
 ?>
 {
-        "startDate":"<?php echo date("Y,n,d,G,m,s", $Created ); ?>",
-        "endDate":"<?php echo date("Y,n,d,G,m,s", $Created ); ?>",
+        "startDate":"<?php echo date("Y,n,d,G,i", $Created ); ?>",
+        "endDate":"<?php echo date("Y,n,d,G,i", $Created ); ?>",
         "headline":"<?php echo $HtmlEncoded; ?>",
         "text":"<?php echo ( $IsShortened && false ? $HtmlEncoded : "<img style='float: left; border: 0; margin-right: 5px;' src='" . $Post["Creator"]["Avatar"] . "' /><span style='font-size: 18px;'>" . $Post["Creator"]["Name"] . "</span>"  ); ?>",
         "asset": {
